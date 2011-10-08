@@ -41,7 +41,7 @@ Usage:
 
 Install:
 	Add the following line to ~/.bashrc:
-		. path_to_shbookmark/bookmark.sh mkcmd
+		source path_to_shbookmark/bookmark.sh mkcmd
 
 
 Customize:
