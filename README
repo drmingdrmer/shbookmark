@@ -47,7 +47,7 @@ Install:
 Customize:
 	export SHBOOKMARK_TREE=1
 		Default:""
-		To display matched entries as directory tree.
+		To display matched entries in tree view.
 
 	export SHBOOKMARK_COLOR=1
 		Default:""
