@@ -1,9 +1,9 @@
 #!/bin/bash
 
-DIR="${BASH_SOURCE[0]}";
-DIR="$( cd -P "$( dirname "$DIR" )" && pwd )"
+shbookmark_dir="${BASH_SOURCE[0]}";
+shbookmark_dir="$( cd -P "$( dirname "$shbookmark_dir" )" && pwd )"
 
-ss=$DIR/bookmark.sh
+ss=$shbookmark_dir/bookmark.sh
 
 alias ga=".     $ss add    "
 alias g=".      $ss go     "

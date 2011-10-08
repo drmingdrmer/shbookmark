@@ -36,6 +36,42 @@ sh_bookmark_reverse()
     echo -nE "$p"
 }
 
+sh_bookmark_tree()
+{
+    local paths="$*"
+
+    rpaths=$(sh_bookmark_reverse $paths)
+    tmpl="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+    path=${rpaths%% *}
+    rpaths=${rpaths#* }
+
+
+    newr=""
+    for prev in $rpaths; do
+        sppath=${path//\// }
+        spprev=${prev//\// }
+
+        stripped=""
+        for e in $sppath;do 
+            if [ "$e" == "${spprev%% *}" ]; then
+                elen=${#e}
+                stripped=$stripped${tmpl:${#stripped}:$elen+1}
+                spprev=${spprev#* }
+                sppath=${sppath#* }
+            else
+                tmpl=${tmpl:0:${#stripped}}"|!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                stripped=$stripped\`${sppath// /\/}
+                break
+            fi
+        done
+        newr="${stripped#!} $newr"
+
+        path=$prev
+    done
+
+    echo -nE "$prev ${newr% }"
+}
 
 
 case $cmd in
@@ -76,6 +112,7 @@ case $cmd in
                 fi
                 filteringCommand="$filteringCommand | fgrep $flg $cond"
             done
+            keywords=${keywords:2}
 
 
             echo "::$params"
@@ -95,56 +132,32 @@ case $cmd in
                 return 0
             else
 
-
-                echo -e "\n"
-
-                rpaths=$(sh_bookmark_reverse $paths)
-                tmpl="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-
-                path=${rpaths%% *}
-                rpaths=${rpaths#* }
-
-
-                newr=""
-                for prev in $rpaths; do
-                    sppath=${path//\// }
-                    spprev=${prev//\// }
-
-                    stripped=""
-                    for e in $sppath;do 
-                        if [ "$e" == "${spprev%% *}" ]; then
-                            elen=${#e}
-                            stripped=$stripped${tmpl:${#stripped}:$elen+1}
-                            spprev=${spprev#* }
-                            sppath=${sppath#* }
-                        else
-                            tmpl=${tmpl:0:${#stripped}}"|!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                            stripped=$stripped\`${sppath// /\/}
-                            break
-                        fi
-                    done
-                    newr="${stripped#!} $newr"
-
-                    path=$prev
-                done
-
-                paths="$prev ${newr% }"
+                if [ "$SHBOOKMARK_TREE" == "1" ];then
+                    paths=$(sh_bookmark_tree $paths)
+                fi
 
                 i=0
                 for p in $paths; do
                     let i=i+1
-                    echo -E "   $i --- ${p//!/ }" | grep --color=auto "${keywords:2}\|$"
+                    line="   $i --- ${p//!/ }"
+                    if [ "$SHBOOKMARK_COLOR" == "1" ]; then
+                        echo -E "$line" | grep --color=auto "$keywords\|$"
+                    else
+                        echo -E "$line"
+                    fi
                 done
 
 
                 echo -e "\n"
 
-                echo "(Press ENTER then select by number)"
+                echo "(Press ENTER to select by number)"
                 read -p "Search For :" sel
 
                 # ENTER entered
                 if [[ "x$sel" = "x" ]];then
+
                     read -n1 -p "N=" sel
+
                     if [ "x$sel" == "x" ]; then
                         sel=1
                     fi

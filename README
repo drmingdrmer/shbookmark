@@ -1,0 +1,55 @@
+Usage:
+	"ga":
+		Add `pwd` to bookmark
+
+	"gdel":
+		Delete `pwd` from bookmark
+
+	"gclean":
+		Delete all inexistent bookmark entries.
+
+	"g key1 [key2 [key3..]]":
+		Go to the directory specified by keywords key1, key2..
+
+		If only one directory matched, it goes to the directory at
+		once. Or it lists all matched direcotries for narrawing search.
+
+		For example, "g" without argument shows:
+		   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
+		   2 --- ~/VCS/gitsvn/bbtt.com
+		   ...
+		   7 --- ~/bash.xp/plugin/shbookmark
+		(Press ENTER to select by number)
+		Search For :
+
+
+		"g VCS" shows:
+		   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
+		   2 --- ~/VCS/gitsvn/bbtt.com
+		(Press ENTER to select by number)
+		Search For :
+
+		Now adding another keyword "svn" it goes to
+		"~/VCS/gitsvn/bbtt.com".
+
+		The above working flow is equivalent to "g VCS gitsvn".
+
+	"g key1 -key2":
+		Search directory that matches "key1" without containing
+		"key2".
+
+
+Install:
+	Add the following line to ~/.bashrc:
+		. path_to_shbookmark/bookmarkrc
+
+
+Customize:
+	export SHBOOKMARK_TREE=1
+		Default:""
+		To display matched entries as directory tree.
+
+	export SHBOOKMARK_COLOR=1
+		Default:""
+		Enable highlighting matched keywords.
+
