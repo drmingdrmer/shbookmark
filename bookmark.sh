@@ -1,10 +1,5 @@
 #!/bin/bash
 
-
-bookmarkFile=~/.shbookmark
-tmp=$bookmarkFile.tmp
-
-
 if [ $# -lt 1 ];then
     echo "usage : $0 cmd [params]"
     return 1;
@@ -19,28 +14,42 @@ params=" $@"
 param=${param:-$PWD}
 param=${param/#$HOME/~}
 
+bookmarkFile=~/.shbookmark
+tmp=$bookmarkFile.tmp
 
-if [[ ! -f $bookmarkFile ]];then
-    >$bookmarkFile
+if [ "$cmd" == "mkcmd" ]; then
+    shbookmark_dir="${BASH_SOURCE[0]}";
+    shbookmark_dir="$( cd -P "$( dirname "$shbookmark_dir" )" && pwd )"
+
+    ss=$shbookmark_dir/bookmark.sh
+
+    alias ga=".     $ss add    "
+    alias g=".      $ss go     "
+    alias gdel=".   $ss delete "
+    alias gclean=". $ss clean  "
+
+    return
 fi
 
+[ -f $bookmarkFile ] || >$bookmarkFile
 
-sh_bookmark_goto() { cd $1; }
-sh_bookmark_reverse()
-{
+
+shbookmark_goto() { cd $1; }
+shbookmark_mv() { [ -f "$tmp" ] && mv -f $tmp $bookmarkFile; }
+shbookmark_reverse()
+{ #{{{
     local p=""
     for i in $*; do
         p="$i $p"
     done
     p=${p% }
     echo -nE "$p"
-}
-
-sh_bookmark_tree()
-{
+} #}}}
+shbookmark_tree()
+{ #{{{
     local paths="$*"
 
-    rpaths=$(sh_bookmark_reverse $paths)
+    rpaths=$(shbookmark_reverse $paths)
     tmpl="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
     path=${rpaths%% *}
@@ -71,26 +80,23 @@ sh_bookmark_tree()
     done
 
     echo -nE "$prev ${newr% }"
-}
+} #}}}
 
 
 case $cmd in
 
     add)
-        echo "$param" >> $bookmarkFile
-        sort $bookmarkFile | uniq > $tmp
-        mv -f $tmp $bookmarkFile
+        echo "$param" >> $bookmarkFile \
+            && { sort $bookmarkFile | uniq > $tmp; } && shbookmark_mv
 
         echo "$param has been added to bookmark"
         ;;
 
     delete)
-        fgrep -v "$param" $bookmarkFile > $tmp
-        mv -f $tmp $bookmarkFile
+        fgrep -v "$param" $bookmarkFile > $tmp && shbookmark_mv
 
         echo "$param" has been deleted
         ;;
-
 
     go)
         while [ 1 ];do
@@ -128,12 +134,12 @@ case $cmd in
                 continue
 
             elif [ $count -eq 1 ];then
-                sh_bookmark_goto `eval $filteringCommand`
+                shbookmark_goto `eval $filteringCommand`
                 return 0
             else
 
                 if [ "$SHBOOKMARK_TREE" == "1" ];then
-                    paths=$(sh_bookmark_tree $paths)
+                    paths=$(shbookmark_tree $paths)
                 fi
 
                 i=0
@@ -163,7 +169,7 @@ case $cmd in
                     fi
                     ar=(`eval $filteringCommand`)
                     echo ""
-                    sh_bookmark_goto ${ar[$sel-1]}
+                    shbookmark_goto ${ar[$sel-1]}
                     return 0
 
                 else
@@ -186,7 +192,7 @@ case $cmd in
                 echo "$entry doesn't exist"
             fi
         done
-        mv $tmp $bookmarkFile
+        shbookmark_mv
         ;;
 
     *)
