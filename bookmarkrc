@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DIR="${BASH_SOURCE[0]}";
+DIR="$( cd -P "$( dirname "$DIR" )" && pwd )"
+
+ss=$DIR/bookmark.sh
+
+alias ga=".     $ss add    "
+alias g=".      $ss go     "
+alias gdel=".   $ss delete "
+alias gclean=". $ss clean  "
