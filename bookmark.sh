@@ -11,25 +11,26 @@ param=$2
 shift 1
 params=" $@"
 
-param=${param:-$PWD}
-param=${param/#$HOME/~}
-
-bookmarkFile=~/.shbookmark
-tmp=$bookmarkFile.tmp
-
 if [ "$cmd" == "mkcmd" ]; then
     shbookmark_dir="${BASH_SOURCE[0]}";
     shbookmark_dir="$( cd -P "$( dirname "$shbookmark_dir" )" && pwd )"
 
     ss=$shbookmark_dir/bookmark.sh
 
-    alias ga=".     $ss add    "
-    alias g=".      $ss go     "
-    alias gdel=".   $ss delete "
-    alias gclean=". $ss clean  "
+    pref=${param:-g}
+    eval "alias ${pref}a='.     $ss add'"
+    eval "alias ${pref}='.      $ss go'"
+    eval "alias ${pref}del='.   $ss delete'"
+    eval "alias ${pref}clean='. $ss clean'"
 
     return
 fi
+
+param=${param:-$PWD}
+param=${param/#$HOME/~}
+
+bookmarkFile=~/.shbookmark
+tmp=$bookmarkFile.tmp
 
 [ -f $bookmarkFile ] || >$bookmarkFile
 

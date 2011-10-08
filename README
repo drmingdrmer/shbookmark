@@ -41,7 +41,14 @@ Usage:
 
 Install:
 	Add the following line to ~/.bashrc:
-		source path_to_shbookmark/bookmark.sh mkcmd
+		source path_to_shbookmark/bookmark.sh mkcmd [prefix]
+
+        User defined prefix can be optionally sepcified to replace the default
+        "g".
+
+        To use "bk" as prefix:
+		source path_to_shbookmark/bookmark.sh mkcmd bk
+        Thus commands should be: "bkadd", "bkdel", "bkclean", "bk"
 
 
 Customize:
