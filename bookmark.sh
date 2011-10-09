@@ -13,7 +13,7 @@ params=" $@"
 
 if [ "$cmd" == "mkcmd" ]; then
 
-    shbookmark_dir="${BASH_SOURCE[0]}";
+    shbookmark_dir="${BASH_SOURCE[0]}"
     while [ -h "$shbookmark_dir" ]; do shbookmark_dir=`readlink "${shbookmark_dir}"`; done
     shbookmark_dir="$( cd -P "$( dirname "$shbookmark_dir" )" && pwd )"
 
