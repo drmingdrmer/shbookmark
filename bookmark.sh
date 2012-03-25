@@ -11,7 +11,7 @@ param=$2
 shift 1
 params=" $@"
 
-if [ "$cmd" == "mkcmd" ]; then
+if [ "x$cmd" == "x--init" ]; then
 
     shbookmark_dir="${BASH_SOURCE[0]}"
     while [ -h "$shbookmark_dir" ]; do shbookmark_dir=`readlink "${shbookmark_dir}"`; done
