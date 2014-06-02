@@ -112,7 +112,7 @@ case $cmd in
             filteringCommand="cat $bookmarkFile"
             keywords=""
             for cond in $params;do
-                if [ `expr "$cond" : "-"` -eq 1 ];then
+                if [ "${cond:0:1}" == "-" ];then
                     flg=" -v "
                     cond=${cond:1}
                 else
