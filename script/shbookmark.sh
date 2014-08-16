@@ -25,6 +25,14 @@ if [ "x$cmd" == "x--init" ]; then
     eval "alias ${pref}del='.   $ss delete'"
     eval "alias ${pref}clean='. $ss clean'"
 
+    if [ ".$SHBOOKMARK_COLOR" == "." ]; then
+        export SHBOOKMARK_COLOR=1
+    fi
+
+    if [ ".$SHBOOKMARK_CASE_SENSITIVE" == "." ]; then
+        export SHBOOKMARK_CASE_SENSITIVE=0
+    fi
+
     return
 fi
 
@@ -109,6 +117,11 @@ case $cmd in
                 return
             fi
 
+            if [ ".$SHBOOKMARK_CASE_SENSITIVE" == ".1" ]; then
+                caseflag=""
+            else
+                caseflag=" -i "
+            fi
             filteringCommand="cat $bookmarkFile"
             keywords=""
             for cond in $params;do
@@ -119,7 +132,7 @@ case $cmd in
                     flg=""
                     keywords="$keywords\|$cond"
                 fi
-                filteringCommand="$filteringCommand | fgrep $flg $cond"
+                filteringCommand="$filteringCommand | fgrep $caseflag $flg $cond"
             done
             keywords=${keywords:2}
 
@@ -155,7 +168,7 @@ case $cmd in
                         highlight="$keywords\|$"
                     fi
                     if [ "$SHBOOKMARK_COLOR" == "1" ]; then
-                        echo -E "$line" | grep --color=auto "$highlight"
+                        echo -E "$line" | grep $caseflag --color=auto "$highlight"
                     else
                         echo -E "$line"
                     fi
