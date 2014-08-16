@@ -149,8 +149,13 @@ case $cmd in
                 for p in $paths; do
                     let i=i+1
                     line="   $i --- ${p//!/ }"
+                    if [ ".$keywords" == "." ]; then
+                        highlight="$"
+                    else
+                        highlight="$keywords\|$"
+                    fi
                     if [ "$SHBOOKMARK_COLOR" == "1" ]; then
-                        echo -E "$line" | grep --color=auto "$keywords\|$"
+                        echo -E "$line" | grep --color=auto "$highlight"
                     else
                         echo -E "$line"
                     fi
