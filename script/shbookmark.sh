@@ -17,7 +17,7 @@ if [ "x$cmd" == "x--init" ]; then
     while [ -h "$shbookmark_dir" ]; do shbookmark_dir=`readlink "${shbookmark_dir}"`; done
     shbookmark_dir="$( cd -P "$( dirname "$shbookmark_dir" )" && pwd )"
 
-    ss=$shbookmark_dir/bookmark.sh
+    ss=$shbookmark_dir/shbookmark.sh
 
     pref=${param:-g}
     eval "alias ${pref}a='.     $ss add'"
