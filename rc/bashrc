@@ -1,1 +1,1 @@
-. ./script/shbookmark.sh --init
+. ./script/shbookmark.sh --init "$@"
