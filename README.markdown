@@ -1,3 +1,6 @@
+`shbookmark` is path bookmark engine on shell.
+Go to directory with minimal typing, in fuzzy searching mode.
+
 # Install
 
 Add the following line to ~/.bashrc:
@@ -9,17 +12,17 @@ Add the following line to ~/.bashrc:
 
 ## "ga":
 
-Add `pwd` to bookmark
+Add `pwd` to bookmark.
 
 ## "ga path":
 
-Add `path` to bookmark
+Add `path` to bookmark.
 
 ## "gdel":
 
-Delete `pwd` from bookmark
+Delete `pwd` from bookmark.
 
-Edit directly ~/.shbookmark to delete/orgnize bookmark entries.
+Or Edit directly ~/.shbookmark to delete/orgnize bookmark entries.
 
 ## "gclean":
 
@@ -35,22 +38,22 @@ Or it lists all direcotries matched for narrawing search.
 
 For example, "g" without argument shows:
 
-   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
-   2 --- ~/VCS/gitsvn/bbtt.com
-   ...
-   7 --- ~/bash.xp/plugin/shbookmark
-(Press ENTER to select by number)
-Search For :
+       1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
+       2 --- ~/VCS/gitsvn/bbtt.com
+       ...
+       7 --- ~/bash.xp/plugin/shbookmark
+    (Press ENTER to select by number)
+    Search For :
 
 
 "g VCS" shows:
-   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
-   2 --- ~/VCS/gitsvn/bbtt.com
-(Press ENTER to select by number)
-Search For :
 
-Now adding another keyword "svn" it goes to
-"~/VCS/gitsvn/bbtt.com".
+       1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
+       2 --- ~/VCS/gitsvn/bbtt.com
+    (Press ENTER to select by number)
+    Search For :
+
+Now input "svn" it goes to "~/VCS/gitsvn/bbtt.com".
 
 The above working flow is equivalent to "g VCS gitsvn".
 
@@ -65,7 +68,7 @@ The above working flow is equivalent to "g VCS gitsvn".
 
 By default shbookmark alias prefix is `g`. User could define his own prefix.
 
-To use "bk" as prefix, load shbookmark with :
+To use "bk" as prefix, load shbookmark with argument `bk`:
 
     source <path_to_shbookmark>/bin/shbookmark.sh make_alias bk
 
