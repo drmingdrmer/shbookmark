@@ -11,7 +11,7 @@ param=$2
 shift 1
 params=" $@"
 
-if [ "x$cmd" == "x--init" ]; then
+if [ ".$cmd" == ".make_alias" ]; then
 
     shbookmark_dir="${BASH_SOURCE[0]}"
     while [ -h "$shbookmark_dir" ]; do shbookmark_dir=`readlink "${shbookmark_dir}"`; done
@@ -161,7 +161,8 @@ case $cmd in
                 i=0
                 for p in $paths; do
                     let i=i+1
-                    line="   $i --- ${p//!/ }"
+                    idx=$(printf "%3d" $i)
+                    line="   $idx --- ${p//!/ }"
                     if [ ".$keywords" == "." ]; then
                         highlight="$"
                     else
