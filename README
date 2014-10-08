@@ -1,66 +1,87 @@
-Usage:
-	"ga":
-		Add `pwd` to bookmark
+# Install
 
-	"gdel":
-		Delete `pwd` from bookmark
+Add the following line to ~/.bashrc:
 
-	"gclean":
-		Delete all inexistent bookmark entries.
-
-	"g key1 [key2 [key3..]]":
-		Go to the directory specified by keywords key1, key2..
-
-		If only one directory matched, it goes to the directory at
-		once. Or it lists all matched direcotries for narrawing search.
-
-		For example, "g" without argument shows:
-		   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
-		   2 --- ~/VCS/gitsvn/bbtt.com
-		   ...
-		   7 --- ~/bash.xp/plugin/shbookmark
-		(Press ENTER to select by number)
-		Search For :
+    source <path_to_shbookmark>/bin/shbookmark.sh make_alias
 
 
-		"g VCS" shows:
-		   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
-		   2 --- ~/VCS/gitsvn/bbtt.com
-		(Press ENTER to select by number)
-		Search For :
+# Usage
 
-		Now adding another keyword "svn" it goes to
-		"~/VCS/gitsvn/bbtt.com".
+## "ga":
 
-		The above working flow is equivalent to "g VCS gitsvn".
+Add `pwd` to bookmark
 
-	"g key1 -key2":
-		Search directory that matches "key1" without containing
-		"key2".
+## "ga path":
+
+Add `path` to bookmark
+
+## "gdel":
+
+Delete `pwd` from bookmark
+
+Edit directly ~/.shbookmark to delete/orgnize bookmark entries.
+
+## "gclean":
+
+Delete all inexistent bookmark entries.
+
+## "g key1 [key2 [key3..]]":
+
+Go to the directory that matches keywords key1, key2..
+
+If only one directory matched, it goes to the directory at
+once.
+Or it lists all direcotries matched for narrawing search.
+
+For example, "g" without argument shows:
+
+   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
+   2 --- ~/VCS/gitsvn/bbtt.com
+   ...
+   7 --- ~/bash.xp/plugin/shbookmark
+(Press ENTER to select by number)
+Search For :
 
 
-Install:
-	Add the following line to ~/.bashrc:
-		source path_to_shbookmark/rc/bashrc
+"g VCS" shows:
+   1 --- ~/VCS/git/SAE_SDK_Linux_Mac/
+   2 --- ~/VCS/gitsvn/bbtt.com
+(Press ENTER to select by number)
+Search For :
 
-        User defined prefix can be optionally sepcified to replace the default
-        "g".
+Now adding another keyword "svn" it goes to
+"~/VCS/gitsvn/bbtt.com".
 
-        To use "bk" as prefix:
-		source path_to_shbookmark/rc/bashrc bk
-        Thus commands should be: "bkadd", "bkdel", "bkclean", "bk"
+The above working flow is equivalent to "g VCS gitsvn".
+
+## "g key1 -key2":
+
+    look for directory that contains "key1" but not contains "key2".
 
 
-Customization:
-	export SHBOOKMARK_TREE=1
-		Default:""
-		"1" enables displaying entries in tree layout.
+# Customization
 
-	export SHBOOKMARK_COLOR=1
-		Default:"1"
-		"1" enables highlighting matched keywords.
+## Change Command Prefix
 
-	export SHBOOKMARK_CASE_SENSITIVE=1
-		Default:"0"
-		"1" enables case sensitive matching.
+By default shbookmark alias prefix is `g`. User could define his own prefix.
+
+To use "bk" as prefix, load shbookmark with :
+
+    source <path_to_shbookmark>/bin/shbookmark.sh make_alias bk
+
+Thus commands will be: "bkadd", "bkdel", "bkclean", "bk"
+
+## Environment Variable Options
+
+`export SHBOOKMARK_TREE=1`
+    Default:""
+    "1" turns on bookmark displaying in tree view.
+
+`export SHBOOKMARK_COLOR=1`
+    Default:"1"
+    "1" turns on highlighting of matched keywords.
+
+`export SHBOOKMARK_CASE_SENSITIVE=1`
+    Default:"0"
+    "1" turns on case sensitive matching.
 
