@@ -77,14 +77,17 @@ Thus commands will be: "bkadd", "bkdel", "bkclean", "bk"
 ## Environment Variable Options
 
 `export SHBOOKMARK_TREE=1`
+
     Default:""
     "1" turns on bookmark displaying in tree view.
 
 `export SHBOOKMARK_COLOR=1`
+
     Default:"1"
     "1" turns on highlighting of matched keywords.
 
 `export SHBOOKMARK_CASE_SENSITIVE=1`
+
     Default:"0"
     "1" turns on case sensitive matching.
 
