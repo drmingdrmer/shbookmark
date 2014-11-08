@@ -136,6 +136,12 @@ case $cmd in
             done
             keywords=${keywords:2}
 
+            if [ ".$keywords" == "." ]; then
+                highlight_ptn="$"
+            else
+                highlight_ptn="$keywords\|$"
+            fi
+
 
             echo "::$params"
 
@@ -163,17 +169,13 @@ case $cmd in
                     let i=i+1
                     idx=$(printf "%3d" $i)
                     line="   $idx --- ${p//!/ }"
-                    if [ ".$keywords" == "." ]; then
-                        highlight="$"
-                    else
-                        highlight="$keywords\|$"
-                    fi
+                    echo -E "$line"
+                done | \
                     if [ "$SHBOOKMARK_COLOR" == "1" ]; then
-                        echo -E "$line" | grep $caseflag --color=auto "$highlight"
+                        grep $caseflag --color=auto "$highlight_ptn"
                     else
-                        echo -E "$line"
+                        cat
                     fi
-                done
 
 
                 echo -e "\n"
