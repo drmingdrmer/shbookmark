@@ -156,7 +156,8 @@ case $cmd in
                 continue
 
             elif [ $count -eq 1 ];then
-                shbookmark_goto `eval $filteringCommand`
+                _dst="$(eval $filteringCommand)"
+                eval "shbookmark_goto $_dst"
                 return 0
             else
 
@@ -193,7 +194,7 @@ case $cmd in
                     fi
                     ar=(`eval $filteringCommand`)
                     echo ""
-                    shbookmark_goto ${ar[$sel-1]}
+                    eval "shbookmark_goto ${ar[$sel-1]}"
                     return 0
 
                 else
