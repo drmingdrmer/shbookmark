@@ -210,8 +210,10 @@ case $cmd in
 
     clean)
 
-        for entry in `cat $bookmarkFile`;do
-            if [ -d $entry ];then
+        hm=${HOME//\//\\\/}
+        for entry in $(cat $bookmarkFile); do
+            en=$(echo $entry | sed "s/~/$hm/")
+            if [ -d $en ];then
                 echo $entry >> $tmp
             else
                 echo "$entry doesn't exist"
