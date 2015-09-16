@@ -37,7 +37,7 @@ if [ ".$cmd" == ".make_alias" ]; then
 fi
 
 param=${param:-$PWD}
-param=${param/#$HOME/~}
+param=${param/#$HOME/"~"}
 
 bookmarkFile=~/.shbookmark
 tmp=$bookmarkFile.tmp
