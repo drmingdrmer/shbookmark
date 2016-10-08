@@ -50,47 +50,61 @@ shbookmark_mv() { [ -f "$tmp" ] && mv -f $tmp $bookmarkFile; }
 shbookmark_reverse()
 { #{{{
     local p=""
-    for i in $*; do
-        p="$i $p"
+    for i in "$@"; do
+        p="\"$i\" $p"
     done
-    p=${p% }
+    p="${p% }"
     echo -nE "$p"
 } #}}}
 shbookmark_tree()
 { #{{{
-    local paths="$*"
+    local paths="$@"
+    paths=$(for e in $(eval echo $paths); do echo "\"ROOT$e\""; done)
 
-    rpaths=$(shbookmark_reverse $paths)
-    tmpl="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    local reversed_paths=$(shbookmark_reverse $(eval echo $paths))
+    local tmpl="$(printf "%80s" " " | tr " " "!")"
 
-    path=${rpaths%% *}
-    rpaths=${rpaths#* }
+    local path=
+    local rst=""
+    for prev in $(eval echo $reversed_paths); do
 
+        if [ -z "$path" ]; then
+            path="$prev"
+            continue
+        fi
 
-    newr=""
-    for prev in $rpaths; do
-        sppath=${path//\// }
-        spprev=${prev//\// }
+        path_elts="${path//\// }"
+        prev_elts="${prev//\// }"
 
-        stripped=""
-        for e in $sppath;do 
-            if [ "$e" == "${spprev%% *}" ]; then
-                elen=${#e}
-                stripped=$stripped${tmpl:${#stripped}:$elen+1}
-                spprev=${spprev#* }
-                sppath=${sppath#* }
-            else
-                tmpl=${tmpl:0:${#stripped}}"|!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                stripped=$stripped\`${sppath// /\/}
-                break
-            fi
-        done
-        newr="${stripped#!} $newr"
+        # if the first elt is different
+        if [ "${path_elts%% *}" != "${prev_elts%% *}" ]; then
+            tmpl="$(printf "%80s" " " | tr " " "!")"
+            stripped="$path"
+        else
+            stripped=""
+            for ee in $path_elts; do
+                if [ "$ee" == "${prev_elts%% *}" ]; then
+                    elen=${#ee}
+                    stripped=$stripped${tmpl:${#stripped}:$elen+1}
+                    prev_elts=${prev_elts#* }
+                    path_elts=${path_elts#* }
+                else
+                    tmpl=${tmpl:0:${#stripped}}"|!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                    stripped=$stripped\`${path_elts// /\/}
+                    break
+                fi
+            done
+        fi
+        stripped="${stripped:4}"
+        rst="'${stripped#!}' $rst"
 
         path=$prev
     done
 
-    echo -nE "$prev ${newr% }"
+    prev="${prev:4}"
+    rst="'$prev' ${rst% }"
+    rst="${rst% }"
+    echo -nE "$rst"
 } #}}}
 
 
@@ -147,8 +161,7 @@ case $cmd in
 
             hm=${HOME//\//\\\/}
             count=`eval $filteringCommand | wc -l`
-            paths=`eval $filteringCommand | sed "s/$hm/~/"`
-
+            paths=`eval $filteringCommand | sed "s/$hm/~/" | sed 's/.*/"&"/'`
 
             if [ $count -eq 0 ];then
                 echo "nothing found.............."
@@ -162,11 +175,11 @@ case $cmd in
             else
 
                 if [ "$SHBOOKMARK_TREE" == "1" ];then
-                    paths=$(shbookmark_tree $paths)
+                    paths="$(shbookmark_tree $paths)"
                 fi
 
                 i=0
-                for p in $paths; do
+                for p in $(eval echo $paths); do
                     let i=i+1
                     idx=$(printf "%3d" $i)
                     line="   $idx --- ${p//!/ }"
