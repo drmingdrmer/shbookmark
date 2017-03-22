@@ -14,7 +14,9 @@ params=" $@"
 if [ ".$cmd" == ".make_alias" ]; then
 
     shbookmark_dir="${BASH_SOURCE[0]}"
-    while [ -h "$shbookmark_dir" ]; do shbookmark_dir=`readlink "${shbookmark_dir}"`; done
+    while [ -h "$shbookmark_dir" ]; do
+        shbookmark_dir=`readlink "${shbookmark_dir}"`
+    done
     shbookmark_dir="$( cd -P "$( dirname "$shbookmark_dir" )" && pwd )"
 
     ss=$shbookmark_dir/shbookmark.sh
@@ -45,19 +47,30 @@ tmp=$bookmarkFile.tmp
 [ -f $bookmarkFile ] || >$bookmarkFile
 
 
-shbookmark_goto() { cd $1; }
-shbookmark_mv() { [ -f "$tmp" ] && mv -f $tmp $bookmarkFile; }
+shbookmark_goto() {
+    cd $1
+}
+
+
+shbookmark_mv()
+{
+    [ -f "$tmp" ] && mv -f $tmp $bookmarkFile
+}
+
+
 shbookmark_reverse()
-{ #{{{
+{
     local p=""
     for i in "$@"; do
         p="\"$i\" $p"
     done
     p="${p% }"
     echo -nE "$p"
-} #}}}
+}
+
+
 shbookmark_tree()
-{ #{{{
+{
     local paths="$@"
     paths=$(for e in $(eval echo $paths); do echo "\"ROOT$e\""; done)
 
@@ -105,7 +118,34 @@ shbookmark_tree()
     rst="'$prev' ${rst% }"
     rst="${rst% }"
     echo -nE "$rst"
-} #}}}
+}
+
+
+shbookmark_clean()
+{
+    local dry_run=0
+    local hm=${HOME//\//\\\/}
+    local en=
+
+    if [ "${1-x}" = "-n" ]; then
+        dry_run=1
+    fi
+
+    while read entry; do
+        en="$(echo $entry | sed "s/~/$hm/")"
+        if [ -d "$en" ];then
+            if [ "$dry_run" = "0" ]; then
+                echo "$entry" >> $tmp
+            fi
+        else
+            echo "$entry doesn't exist"
+        fi
+    done<$bookmarkFile
+
+    if [ "$dry_run" = "0" ]; then
+        shbookmark_mv
+    fi
+}
 
 
 case $cmd in
@@ -136,7 +176,7 @@ case $cmd in
             else
                 caseflag=" -i "
             fi
-            filteringCommand="cat $bookmarkFile"
+            filteringCommand='cat '"'$bookmarkFile'"' | while read p; do [ -d "$(eval echo "$p")" ] && echo "$p"; done'
             keywords=""
             for cond in $params;do
                 if [ "${cond:0:1}" == "-" ];then
@@ -157,7 +197,7 @@ case $cmd in
             fi
 
 
-            echo "::$params"
+            echo "params: $params"
 
             hm=${HOME//\//\\\/}
             count=`eval $filteringCommand | wc -l`
@@ -219,23 +259,10 @@ case $cmd in
         done
         ;;
 
-
-
     clean)
-
-        hm=${HOME//\//\\\/}
-        for entry in $(cat $bookmarkFile); do
-            en=$(echo $entry | sed "s/~/$hm/")
-            if [ -d $en ];then
-                echo $entry >> $tmp
-            else
-                echo "$entry doesn't exist"
-            fi
-        done
-        shbookmark_mv
+        shbookmark_clean "$@"
         ;;
 
     *)
         ;;
 esac
-
